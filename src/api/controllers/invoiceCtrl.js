@@ -110,8 +110,8 @@ exports.delete = (req, res, next) => {
 // **********************************************************
 // UPDATE
 exports.update = (req, res, next) => {
-  const { id } = req.params;
-  const schema = Joi.object().keys({
+  // const { id } = req.params;
+  const schema = Joi.object({
     item: Joi.string().optional(),
     date: Joi.date().optional(),
     due: Joi.date().optional(),
@@ -119,15 +119,23 @@ exports.update = (req, res, next) => {
     tax: Joi.number().optional(),
     rate: Joi.number().optional(),
   });
-  const { error, value } = Joi.validate(req.body, schema);
+  const { error, value } = schema.validate({
+    item: req.body.item,
+    date: req.body.date,
+    due: req.body.due,
+    qty: req.body.qty,
+    tax: req.body.tax,
+    rate: req.body.rate,
+  });
+  //  ako ima grešku javlja ju...
   if (error && error.details) {
-    // return res.status(HttpStatus.BAD_REQUEST).json(error);
-    return res.status(402).json(error);
+    return res.status(HttpStatus.BAD_REQUEST).json(error);
   }
-  Invoice.findOneAndUpdate({ _id: id }, value, { new: true })
-    .then((invoice) => res.json(invoice))
-    // .catch((err) => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err));
+  Invoice.findOneAndUpdate({ _id: req.params.id }, value, { new: true })
+    .then((invoice) =>
+      res.json({ poruka: 'Invoice uspješno obnovljen', invoice: invoice })
+    )
     .catch((err) => {
-      res.status(401).json(err);
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err);
     });
 };
