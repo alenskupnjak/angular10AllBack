@@ -1,4 +1,5 @@
 // import { required } from "joi";
+const { text } = require('body-parser');
 const chalk = require('chalk');
 // import Joi, { required } from 'joi';
 const Joi = require('joi');
@@ -7,20 +8,28 @@ const Joi = require('joi');
 // const HttpStatus = require('http-status-codes');
 // import Invoice from '../models/invoice.model';
 
-const Invoice = require('../models/invoice.model');
-
+const Invoice = require('../models/invoiceModel');
 
 exports.findAll = (req, res, next) => {
-  res.json({ msg: 'evo ga u invoice' });
+  // res.json({ msg: 'evo ga u invoice' });
 
-  // Invoice.find()
-  //   .then(invoices => res.json(invoices))
-  //   .catch(err => {
-  //     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err)});
+  Invoice.find()
+    .then((invoices) => {
+      res.json(invoices);
+    })
+    .catch((err) => {
+      // res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err)});
+      res.status(417).json(err);
+    });
 };
 
+// Kreiranje invoice
 exports.create = (req, res, next) => {
-  const schema = Joi.object().keys({
+  // throw new Error('Bacena greška za vježbu')
+  const { item, qty, date, due, rate, tax } = req.body;
+
+  // JOI provjera Definicija
+  const schema = Joi.object({
     item: Joi.string().required(),
     date: Joi.date().required(),
     due: Joi.date().required(),
@@ -28,27 +37,51 @@ exports.create = (req, res, next) => {
     tax: Joi.number().optional(),
     rate: Joi.number().optional(),
   });
-  const { error, value } = Joi.validate(req.body, schema);
+
+  // const { error, value } = schemaNovo.validate({ item: item, date: date });
+  const { error, value } = schema.validate({
+    item: item,
+    date: date,
+    due: due,
+    qty: qty,
+    tax: tax,
+    rate: rate,
+  });
+
+  console.log(error, value);
+
+  // // const { error, value } = Joi.validate(req.body, schema);
   if (error && error.details) {
     // return res.status(HttpStatus.BAD_REQUEST).json(error);
-    return res.status(401).json(error);
+    return res.status(401)
+      .json({ poruka: 'Neuspjelo kreiranje Invoice. Joi greška', error: error });
   }
+
   Invoice.create(value)
-    .then((invoice) => res.json(invoice))
+    .then((invoice) => {
+      res.json(invoice);
+    })
     // .catch((err) => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err));
-    .catch((err) => res.status(401).json(err));
+    .catch((err) => {
+      res.status(500).json({
+        poruka: 'Neuspjeli kreiranje invoice',
+        error: err,
+      });
+    });
 };
 
 exports.findOne = (req, res) => {
   const { id } = req.params;
-  Invoice.findById(id)
+  Invoice.findById(id);
   Invoice.findById(id)
     .then((invoice) => {
       if (!invoice) {
-        return res
-          // .status(HttpStatus.NOT_FOUND)
-          .status(402)
-          .json({ err: 'Could not find any invoice' });
+        return (
+          res
+            // .status(HttpStatus.NOT_FOUND)
+            .status(402)
+            .json({ err: 'Could not find any invoice' })
+        );
       }
       return res.json(invoice);
     })
@@ -61,10 +94,12 @@ exports.delete = (req, res, next) => {
   Invoice.findByIdAndRemove(id)
     .then((invoice) => {
       if (!invoice) {
-        return res
-          // .status(HttpStatus.NOT_FOUND)
-          .status(402)
-          .json({ err: 'Could not delete any invoice' });
+        return (
+          res
+            // .status(HttpStatus.NOT_FOUND)
+            .status(402)
+            .json({ err: 'Could not delete any invoice' })
+        );
       }
       return res.json(invoice);
     })
