@@ -3,6 +3,8 @@ const express = require('express');
 const connectDB = require('./config/db'); // Definicija baze i Import
 const morgan = require('morgan'); // ispisaianje na command liniji poruke...
 const bodyParser = require('body-parser'); // Body parser, bez ovoga ne mozemo slati podatke u req.body
+const swaggerUI = require('swagger-ui-express');
+const swaggerDocument = require('./config/swagger.json');
 
 // Inicijalizacija aplikacije
 console.log(chalk.bold.green('START Aplikacija START'));
@@ -27,6 +29,13 @@ app.use((req, res, next) => {
   // next(error);
   next();
 });
+
+// SWAGGER
+app.use(
+  '/api-docs',
+  swaggerUI.serve,
+  swaggerUI.setup(swaggerDocument, { explorer: true })
+);
 
 // Ispis vremena
 app.use((req, res, next) => {
@@ -55,8 +64,6 @@ app.post('/', (req, res) => {
 // aplikacija APP Invoice
 app.use('/appinvoice', routes);
 
-
-
 // Pozdravna poruka
 app.get('/', (req, res) => {
   res.json({ msg: 'Pozdrav. Ovo je Aplikacija Invoice' });
@@ -78,7 +85,7 @@ app.use((req, res, next) => {
 app.use((error, req, res, next) => {
   res.status(error.status || 500);
   return res.json({
-    poruka:"Greška javljena iz glavnog meddleware",
+    poruka: 'Greška javljena iz glavnog meddleware',
     error: error.message,
   });
 });

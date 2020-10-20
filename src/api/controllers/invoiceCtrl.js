@@ -55,7 +55,9 @@ exports.create = (req, res, next) => {
 
   Invoice.create(value)
     .then((invoice) => {
-      res.json(invoice);
+      console.log(chalk.bold.green('Invoice kreiran'));
+      
+      res.json({ poruka: 'Invoice kreiran', invoice });
     })
     .catch((err) => {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -70,8 +72,6 @@ exports.create = (req, res, next) => {
 exports.findOne = (req, res, next) => {
   Invoice.findById(req.params.id)
     .then((invoice) => {
-      console.log('xxx', invoice);
-
       if (!invoice) {
         return (
           res
