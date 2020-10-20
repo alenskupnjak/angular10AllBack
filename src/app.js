@@ -52,7 +52,7 @@ app.post('/', (req, res) => {
   res.send('Primjer');
 });
 
-// aplikacija API
+// aplikacija APP Invoice
 app.use('/appinvoice', routes);
 
 
