@@ -5,6 +5,8 @@ const morgan = require('morgan'); // ispisaianje na command liniji poruke...
 const bodyParser = require('body-parser'); // Body parser, bez ovoga ne mozemo slati podatke u req.body
 const swaggerUI = require('swagger-ui-express');
 const swaggerDocument = require('./config/swagger.json');
+const cors = require('cors');
+
 
 // Inicijalizacija aplikacije
 console.log(chalk.bold.green('START Aplikacija START'));
@@ -42,6 +44,10 @@ app.use((req, res, next) => {
   console.log('Time: %d', Date.now());
   next();
 });
+
+// Enable CORS
+app.use(cors());
+
 
 // Dev logging middleware
 //   'dev'   ,
