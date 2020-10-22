@@ -1,6 +1,5 @@
 // import mongoose from 'mongoose';
 const mongoose = require('mongoose');
-const chalk = require('chalk');
 
 // const { Schema } = mongoose;
 const InvoiceSchema = new mongoose.Schema(
@@ -27,11 +26,13 @@ const InvoiceSchema = new mongoose.Schema(
     tax: {
       type: Number,
     },
+    invoiceclient: {
+      ref:'Client',
+      type: mongoose.Schema.ObjectId,
+      required: true,
+    }
   },
   { timestamps: true }
 );
 
-const Rewiew = mongoose.model('Invoice', InvoiceSchema);
-
-// EXPORTS
-module.exports = Rewiew;
+module.exports = mongoose.model('Invoice', InvoiceSchema);

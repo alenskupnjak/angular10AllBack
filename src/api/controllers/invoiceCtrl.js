@@ -1,9 +1,3 @@
-// import { required } from "joi";
-// import Joi, { required } from 'joi';
-// import HttpStatus from 'http-status-codes';
-// import Invoice from '../models/invoice.model';
-
-const { text } = require('body-parser');
 const chalk = require('chalk');
 const Joi = require('joi');
 const HttpStatus = require('http-status-codes');
@@ -12,7 +6,7 @@ const Invoice = require('../models/invoiceModel');
 // ************************************************
 // Pronadi sve zapise
 exports.findAll = (req, res, next) => {
-  Invoice.find()
+  Invoice.find().populate('invoiceclient')
     .then((invoices) => {
       res.json(invoices);
     })
@@ -31,6 +25,7 @@ exports.create = (req, res, next) => {
     item: Joi.string().required(),
     date: Joi.date().required(),
     due: Joi.date().required(),
+    invoiceclient: Joi.string().required(),
     qty: Joi.number().integer().required(),
     tax: Joi.number().optional(),
     rate: Joi.number().optional(),
@@ -41,6 +36,7 @@ exports.create = (req, res, next) => {
     item: req.body.item,
     date: req.body.date,
     due: req.body.due,
+    invoiceclient: req.body.invoiceclient,
     qty: req.body.qty,
     tax: req.body.tax,
     rate: req.body.rate,
@@ -56,7 +52,7 @@ exports.create = (req, res, next) => {
   Invoice.create(value)
     .then((invoice) => {
       console.log(chalk.bold.green('Invoice kreiran'));
-      
+
       res.json({ poruka: 'Invoice kreiran', invoice });
     })
     .catch((err) => {
@@ -95,11 +91,9 @@ exports.delete = (req, res, next) => {
   Invoice.findByIdAndRemove(req.params.id)
     .then((invoice) => {
       if (!invoice) {
-        return res
-          .status(HttpStatus.NOT_FOUND)
-          .json({ err: 'Could not delete any invoice' });
+        return res.status(404).json({ err: 'Could not delete any invoice' });
       }
-      return res.json({
+      return res.status(200).json({
         poruka: 'Invoice obrisan',
         invoice: invoice,
       });
@@ -118,6 +112,8 @@ exports.update = (req, res, next) => {
     qty: Joi.number().integer().optional(),
     tax: Joi.number().optional(),
     rate: Joi.number().optional(),
+    // Povezani podatak veza sa Invoice - clients
+    invoiceclient: Joi.string().optional(),
   });
   const { error, value } = schema.validate({
     item: req.body.item,
