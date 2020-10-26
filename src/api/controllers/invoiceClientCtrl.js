@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const HttpStatus = require('http-status-codes');
-const Client = require('../models/clientModel');
+const Client = require('../models/invoiceClientModel');
 const Joi = require('joi');
 
 // ************************************************
@@ -58,11 +58,7 @@ exports.findOne = (req, res, next) => {
   Client.findById(req.params.id)
     .then((client) => {
       if (!client) {
-        return (
-          res
-            .status(404)
-            .json({ err: 'Could not find any Client' })
-        );
+        return res.status(404).json({ err: 'Could not find any Client' });
       }
       return res.json(client);
     })

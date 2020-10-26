@@ -1,6 +1,6 @@
 const chalk = require('chalk'); // boje consol.log....
 const express = require('express');
-const connectDB = require('./config/db'); // Definicija baze i Import
+const connectDatabaseInvoice = require('./config/invoiceDatabase'); // Definicija baze i Import
 const morgan = require('morgan'); // ispisaianje na command liniji poruke...
 const bodyParser = require('body-parser'); // Body parser, bez ovoga ne mozemo slati podatke u req.body
 const swaggerUI = require('swagger-ui-express');
@@ -19,8 +19,8 @@ const routes = require('./config/routes');
 const dotenv = require('dotenv'); // manage your ENV varijable
 dotenv.config({ path: '.vscode/config.env' });
 
-// Spajanje na bazu
-connectDB();
+// Spajanje na bazu Invoice
+connectDatabaseInvoice();
 
 // Custom Middlevhere
 app.use((req, res, next) => {

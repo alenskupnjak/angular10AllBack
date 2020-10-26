@@ -1,8 +1,8 @@
 // import express from 'express';
 // import invoiceController from '../api/controllers/invoice.controller';
 const express = require('express')
-const invoiceController = require('../api/controllers/invoiceCtrl')
-const clientController = require('../api/controllers/clientCtrl')
+const invoiceController = require('../api/controllers/invoiceInvoiceCtrl')
+const clientController = require('../api/controllers/invoiceClientCtrl')
 
 const router = express.Router();
 
