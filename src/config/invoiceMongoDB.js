@@ -14,7 +14,7 @@ const connectDB = () => {
     .then(() => {
       console.log(
         chalk.bold.blue(
-          `${process.env.OS}, Spojen na MongoDB, PORT= ${process.env.PORT}`
+          `${process.env.OS}, Spojen na MongoDB.`
         )
       );
       if (process.env.NODE_ENV === 'production') {

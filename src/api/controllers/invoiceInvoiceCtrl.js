@@ -122,6 +122,7 @@ exports.update = (req, res, next) => {
     qty: req.body.qty,
     tax: req.body.tax,
     rate: req.body.rate,
+    invoiceclient: req.body.invoiceclient,
   });
   //  ako ima grešku javlja ju...
   if (error && error.details) {
