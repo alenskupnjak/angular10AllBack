@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const Joi = require('joi');
 const HttpStatus = require('http-status-codes');
-const Invoice = require('../models/invoiceInvoiceModel');
+const Invoice = require('../models/invoice.invoice.model');
 
 // ************************************************
 // Pronadi sve zapise

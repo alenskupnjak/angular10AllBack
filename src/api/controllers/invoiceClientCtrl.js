@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const HttpStatus = require('http-status-codes');
-const Client = require('../models/invoiceClientModel');
+const Client = require('../models/invoice.client.model');
 const Joi = require('joi');
 
 // ************************************************

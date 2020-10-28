@@ -1,9 +1,9 @@
 const bcryptjs = require('bcryptjs');
 // import bcryptjs from 'bcryptjs';
 const jwt = require('jsonwebtoken');
-const userService = require('../service/invoiceUserService');
+const userService = require('../service/invoice.user.service');
 // import User from './user.model';
-const User = require('../models/invoiceUserModel');
+const User = require('../models/invoice.user.model');
 // import { devConfig } from '../../../config/env/development';
 
 // *******************************************************************
@@ -66,7 +66,6 @@ exports.login = async (req, res) => {
 
     // Tražim usera u bazi, ako ga ne nade vraca vrijednost NULL
     const user = await User.findOne({ email: value.email });
-    console.log('user=', user, '!NULL', !null);
 
     // ako je user nije pronadem javljam grešku
     if (!user) {
@@ -82,11 +81,11 @@ exports.login = async (req, res) => {
     }
 
     // Kreiram token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '1d',
-    });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {expiresIn: '1d'});
+    console.log('token iz backenda=', token);
+    
 
-    return res.json({ poruka: 'pozdrav', success: true, token: token });
+    return res.json({ poruka: 'Token kreiran', success: true, token: token });
   } catch (err) {
     console.error(err);
     return res.status(500).json(err);

@@ -1,6 +1,6 @@
 const chalk = require('chalk'); // boje consol.log....
 const express = require('express');
-const connectMongoDBInvoice = require('./config/invoiceMongoDB'); // Definicija baze i Import
+const connectMongoDBInvoice = require('./config/connect.invoice.MongoDB'); // Definicija baze i Import
 const morgan = require('morgan'); // ispisaianje na command liniji poruke...
 const bodyParser = require('body-parser'); // Body parser, bez ovoga ne mozemo slati podatke u req.body
 const swaggerUI = require('swagger-ui-express');
@@ -13,7 +13,7 @@ const { configureJWTStrategy } = require('./api/middlewares/passport-jwt');
 console.log(chalk.bold.green('START Aplikacija START'));
 const app = express();
 
-// Import routes
+// Import routes za sve aplikacije
 const routes = require('./config/routes');
 
 // definiramo path za file u koji spremamo potrebne varijable
@@ -67,29 +67,23 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// inicijalizacija passporta
+// inicijalizacija PASSPORT
 app.use(passport.initialize({ userProperty: 'currentUser' }));
 configureJWTStrategy();
 
-////
-// za primjer
-app.post('/', (req, res) => {
-  res.send('Primjer');
-});
 
 // aplikacija APP Invoice
 app.use('/appinvoice', routes);
 
+
 // Pozdravna poruka
 app.get('/', (req, res) => {
+  console.log('Pozdravna poruka, User=',req.user);
   res.json({ msg: 'Pozdrav. Ovo je Aplikacija Invoice' });
 });
 
-app.get('/pozdrav', (req, res) => {
-  res.json({ msg: 'Dobro došli jos jednom' });
-});
 
-// Ako je zadana ruta nepoznata izbacuje grešku
+// NEPOZNATA RUTA izbacuje grešku
 app.use((req, res, next) => {
   const error = new Error('Route not found');
   error.message = 'Zadana je ruta koja ne postoji!';
@@ -97,6 +91,7 @@ app.use((req, res, next) => {
   next(error);
 });
 
+// Error **************************************************
 // Ako se pojavi graška u programu završava ovdje
 app.use((error, req, res, next) => {
   res.status(error.status || 500);
@@ -106,9 +101,8 @@ app.use((error, req, res, next) => {
   });
 });
 
-// definiranje porta
+// definiranje porta, pokretanje palikacije na tom portu
 const PORT = process.env.PORT || 3001;
-
 app.listen(PORT, () => {
   console.log('Server is running on port - ' + PORT);
 });
