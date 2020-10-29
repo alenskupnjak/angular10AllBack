@@ -1,6 +1,8 @@
 const Joi = require('joi');
 
 exports.validateSchema = (body) => {
+  console.log('body=',body);
+  
   const schema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
@@ -12,6 +14,8 @@ exports.validateSchema = (body) => {
   });
 
   if (error && error.details) {
+    console.log('Greška u validaciji');
+    
     return { error };
   }
   return { value };

@@ -1,37 +1,43 @@
 const bcryptjs = require('bcryptjs');
-// import bcryptjs from 'bcryptjs';
 const jwt = require('jsonwebtoken');
 const userService = require('../service/invoice.user.service');
-// import User from './user.model';
 const User = require('../models/invoice.user.model');
-// import { devConfig } from '../../../config/env/development';
 
 // *******************************************************************
 // SIGNUP SIGNUP SIGNUP SIGNUP SIGNUP
 exports.signup = async (req, res) => {
   try {
-    console.log('Signup =', req.body);
-
+    // provjeri jesu li upisani podaci ispravni
     const { error, value } = userService.validateSchema(req.body);
+    
     if (error && error.details) {
       return res.status(400).json(error);
     }
 
-    // Kreiranje usera
-    const user = await User.create(value);
+    // Ako korisnik vec postoji izbacuje grešku
+    const existingUser = await User.findOne({ 'local.email': value.email });
+    if (existingUser) {
+      return res.status(404).json({ err: 'You have already created account' });
+    }
 
+    const user = await new User();
+    user.local.email = value.email;
+    const salt = await bcryptjs.genSalt();
+    const hash = await bcryptjs.hash(value.password, salt);
+    user.local.password = hash;
+    await user.save();
+    
     return res.json({
       success: true,
       message: 'User created successfully',
       pozdrav: req.pozdrav,
-      user: user
+      user: user,
     });
   } catch (err) {
     console.error(err);
     return res.status(500).json(err);
   }
 };
-
 
 // ************************************************************
 //  GET ALL users
@@ -60,12 +66,14 @@ exports.login = async (req, res) => {
   try {
     // Validiram vrijednost unesenih podataka
     const { error, value } = userService.validateSchema(req.body);
+
+    // Ako je greška vracam error
     if (error && error.details) {
       return res.status(400).json(error);
     }
 
     // Tražim usera u bazi, ako ga ne nade vraca vrijednost NULL
-    const user = await User.findOne({ email: value.email });
+    const user = await User.findOne({ 'local.email': value.email });
 
     // ako je user nije pronadem javljam grešku
     if (!user) {
@@ -73,7 +81,7 @@ exports.login = async (req, res) => {
     }
 
     // Usporedujem upisani password sa passwordom u bazi
-    const matched = await bcryptjs.compare(value.password, user.password);
+    const matched = await bcryptjs.compare(value.password, user.local.password);
 
     // ako je neispravan password javljam greški
     if (!matched) {
@@ -81,13 +89,13 @@ exports.login = async (req, res) => {
     }
 
     // Kreiram token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {expiresIn: '1d'});
-    console.log('token iz backenda=', token);
-    
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '1d',
+    });
 
     return res.json({ poruka: 'Token kreiran', success: true, token: token });
   } catch (err) {
-    console.error(err);
+    console.error('greska Login', err);
     return res.status(500).json(err);
   }
 };

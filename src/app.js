@@ -1,13 +1,15 @@
 const chalk = require('chalk'); // boje consol.log....
 const express = require('express');
-const connectMongoDBInvoice = require('./config/connect.invoice.MongoDB'); // Definicija baze i Import
+const connectMongoDBInvoice = require('./config/invoice.connect.MongoDB'); // Definicija baze i Import
 const morgan = require('morgan'); // ispisaianje na command liniji poruke...
 const bodyParser = require('body-parser'); // Body parser, bez ovoga ne mozemo slati podatke u req.body
 const swaggerUI = require('swagger-ui-express');
 const swaggerDocument = require('./config/swagger.json');
 const cors = require('cors');
 const passport = require('passport');
+const session = require('express-session');
 const { configureJWTStrategy } = require('./api/middlewares/passport-jwt');
+const {configureGoogleStrategy } = require('./api/middlewares/passport-google');
 
 // Inicijalizacija aplikacije
 console.log(chalk.bold.green('START Aplikacija START'));
@@ -27,10 +29,6 @@ connectMongoDBInvoice();
 app.use((req, res, next) => {
   console.log(chalk.blue.bgRed.bold('START Middlewhare'));
   req.pozdrav = 'pozdrav iz middlevhera';
-  // const error = new Error('Not found');
-  // error.message = 'Invalid route';
-  // error.status = 404;
-  // next(error);
   next();
 });
 
@@ -66,22 +64,43 @@ app.use(bodyParser.json());
 //  is a method inbuilt in express to recognize the incoming Request Object as strings or arrays.
 app.use(express.urlencoded({ extended: true }));
 
+// Nužno za korištenje GOOGLE passporta
+app.use(
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 // inicijalizacija PASSPORT
 app.use(passport.initialize({ userProperty: 'currentUser' }));
+app.use(passport.session());
 configureJWTStrategy();
 
+// Google
+configureGoogleStrategy();
+
+// save user into session
+passport.serializeUser((user, done) => {
+  done(null, user._id);
+});
+
+// extract the userId from session
+passport.deserializeUser((id, done) => {
+  User.findById(id, (err, user) => {
+    done(null, user);
+  });
+});
 
 // aplikacija APP Invoice
 app.use('/appinvoice', routes);
 
-
 // Pozdravna poruka
 app.get('/', (req, res) => {
-  console.log('Pozdravna poruka, User=',req.user);
+  console.log('Pozdravna poruka, User=', req.user);
   res.json({ msg: 'Pozdrav. Ovo je Aplikacija Invoice' });
 });
-
 
 // NEPOZNATA RUTA izbacuje grešku
 app.use((req, res, next) => {
