@@ -8,7 +8,8 @@ const passport = require('passport');
 
 const router = express.Router();
 
-// Aplikacija INVOICES *****************************************
+// **********************************************************************************
+// Aplikacija INVOICES  PATH /appinvoice   *****************************************
 // INVOICES
 router.get('/invoices', passport.authenticate('jwt', { session: false }), invoiceController.findAll);
 router.get('/invoices/:id', passport.authenticate('jwt', { session: false }), invoiceController.findOne);
@@ -49,6 +50,15 @@ router.get( '/auth/google/callback', passport.authenticate('google', { failureRe
     res.redirect(`${process.env.FRONTEND_URL}/?token=${token}`)
   }
 );
+
+
+// ****************************************************************************************************
+
+
+
+
+
+
 
 // Aplikacija COURSE
 module.exports = router;

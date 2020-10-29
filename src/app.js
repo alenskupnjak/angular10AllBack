@@ -78,7 +78,7 @@ app.use(passport.initialize({ userProperty: 'currentUser' }));
 app.use(passport.session());
 configureJWTStrategy();
 
-// Google
+// GOOGLE
 configureGoogleStrategy();
 
 // save user into session

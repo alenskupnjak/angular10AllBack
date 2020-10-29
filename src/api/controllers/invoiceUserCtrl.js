@@ -93,7 +93,7 @@ exports.login = async (req, res) => {
       expiresIn: '1d',
     });
 
-    return res.json({ poruka: 'Token kreiran', success: true, token: token });
+    return res.json({ poruka: 'Token kreiran', success: true, user:value.email, token: token });
   } catch (err) {
     console.error('greska Login', err);
     return res.status(500).json(err);
