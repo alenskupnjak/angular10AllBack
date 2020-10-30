@@ -15,8 +15,9 @@ const {configureGoogleStrategy } = require('./api/middlewares/passport-google');
 console.log(chalk.bold.green('START Aplikacija START'));
 const app = express();
 
-// Import routes za sve aplikacije
-const routes = require('./config/routes');
+// Import routes Aplikacija
+const routesInvoice = require('./config/invoice.routes');
+const routesCourse = require('./config/course.routes');
 
 // definiramo path za file u koji spremamo potrebne varijable
 const dotenv = require('dotenv'); // manage your ENV varijable
@@ -94,7 +95,8 @@ passport.deserializeUser((id, done) => {
 });
 
 // aplikacija APP Invoice
-app.use('/appinvoice', routes);
+app.use('/appinvoice', routesInvoice);
+app.use('/appcourse', routesCourse );
 
 // Pozdravna poruka
 app.get('/', (req, res) => {

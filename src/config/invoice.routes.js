@@ -1,4 +1,4 @@
-const color = require('color');
+const colors = require('colors');
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const invoiceController = require('../api/controllers/invoiceInvoiceCtrl');
