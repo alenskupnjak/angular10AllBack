@@ -1,6 +1,5 @@
 const colors = require('colors');
 const path = require('path');
-
 const Joi = require('joi');
 const fs = require('fs');
 
@@ -96,6 +95,7 @@ exports.findAll  = (req, res, next) => {
   const databasePath = path.resolve('src/api/models/database', 'course.json');
   const jsonData = fs.readFileSync(databasePath, 'utf-8');
   return res.status(200).json({
+    BrojPodataka: JSON.parse(jsonData).length,
     jsonData: JSON.parse(jsonData),
   });
 };
@@ -116,7 +116,7 @@ exports.create = (req, res, next) => {
   courseData.id = String(Date.now())
     
   //check if the userData fields are missing
-  if (courseData.name == null || courseData.profession == null || courseData.password == null) {
+  if (courseData.name == null || courseData.longDescription == null || courseData.category == null) {
       return res.status(401).json({ error: true, msg: 'User data missing' });
   }
 
