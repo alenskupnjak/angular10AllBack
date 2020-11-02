@@ -9,7 +9,8 @@ const cors = require('cors');
 const passport = require('passport');
 const session = require('express-session');
 const { configureJWTStrategy } = require('./api/middlewares/passport-jwt');
-const {configureGoogleStrategy } = require('./api/middlewares/passport-google');
+const { configureGoogleStrategy } = require('./api/middlewares/passport-google');
+const { configureGithubStrategy } = require('./api/middlewares/passport-github');
 
 // Inicijalizacija aplikacije
 console.log(chalk.bold.green('START Aplikacija START'));
@@ -79,8 +80,9 @@ app.use(passport.initialize({ userProperty: 'currentUser' }));
 app.use(passport.session());
 configureJWTStrategy();
 
-// GOOGLE
-configureGoogleStrategy();
+
+configureGoogleStrategy(); // GOOGLE
+configureGithubStrategy(); // GITHUB
 
 // save user into session
 passport.serializeUser((user, done) => {

@@ -3,7 +3,7 @@ const LESSONS = require('../models/database/lesson.base');
 const colors = require('colors');
 
 exports.getAllCourses = (req, res) => {
-  console.log('Object.values(COURSES)', colors.green(Object.values(COURSES)));
+  // console.log('Object.values(COURSES)', colors.green(Object.values(COURSES)));
   let podatak = Object.values(COURSES)[0];
   // console.log(podatak);
   let podatakArray = Object.values(podatak);
@@ -15,20 +15,14 @@ exports.getAllCourses = (req, res) => {
 exports.getAllLessons = (req, res) => {
   console.log('Object.values(LESSONS)', colors.blue(Object.values(LESSONS)));
   const courseId = String(req.params['id']);
-  console.log(courseId);
 
   let podatak = Object.values(LESSONS)[0];
-  console.log(podatak);
   let podatakArray = Object.values(podatak);
 
   let trazim = podatakArray.filter((data) => {
-    console.log(data.id,courseId);
-    
     return data.courseId.toString() === courseId;
   });
-  console.log(trazim);
 
-  console.log(colors.magenta(podatakArray));
   res.status(200).json({
     // payload: podatakArray,
     trazim,
@@ -39,7 +33,6 @@ exports.getAllLessons = (req, res) => {
 exports.getCourseById = (req, res) => {
   try {
     const courseId = String(req.params['id']);
-    console.log(courseId, typeof courseId);
 
     let kurs = Object.values(COURSES)[0];
 

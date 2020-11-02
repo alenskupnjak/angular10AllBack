@@ -20,7 +20,6 @@ exports.configureGoogleStrategy = () => {
           console.log('refreshToken: ', refreshToken);
           console.log('profile: ', profile);
 
-          // return done(null, profile);
           // const user = await User.findOrCreate({ 'google.id': profile.id }, (err, user) => done(err, user));
 
           // find the user by google id
@@ -38,7 +37,9 @@ exports.configureGoogleStrategy = () => {
           newUser.google.displayName = profile.displayName;
           newUser.google.email = profile.emails[0].value;
 
+          // Snimanie usera u database
           await newUser.save();
+
           console.log('newUser poslije save()', newUser);
           done(null, newUser);
         } catch (err) {

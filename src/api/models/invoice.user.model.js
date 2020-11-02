@@ -26,12 +26,18 @@ const UserSchema = new mongoose.Schema(
       displayName: String,
       token: String,
     },
+    github: {
+      email: String,
+      id: String,
+      displayName: String,
+      token: String,
+    },
   },
   { timestamps: true }
 );
 
 
-// // Enkripcija za password-a peijw snimanja passworda
+// // Enkripcija za password-a prije snimanja passworda
 // UserSchema.pre('save', async function () {
 //   // if user is modified or user is new
 //   if (this.isModified('password') || this.isNew) {

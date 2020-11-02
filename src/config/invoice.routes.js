@@ -29,9 +29,12 @@ router.post('/clients',passport.authenticate('jwt', { session: false }),clientCo
 router.post('/signup', userController.signup);
 router.post('/login', userController.login);
 router.get('/login', passport.authenticate('jwt', { session: false }), userController.getAll);
-router.post('/test',passport.authenticate('jwt', { session: false }),userController.test);
+router.post('/test',passport.authenticate('jwt', { session: false }), userController.test);
 
-// GOOGLE
+router.get('/failure', (req, res) => res.redirect(`${process.env.FRONTEND_URL}/app-invoice/login`));
+
+
+// GOOGLE GOOGLE GOOGLE GOOGLE GOOGLE
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request.  The first step in Google authentication will involve redirecting
 //   the user to google.com.  After authorization, Google will redirect the user
@@ -41,22 +44,28 @@ router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 
 //   request.  If authentication fails, the user will be redirected back to the
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
-router.get( '/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }),
+router.get( '/auth/google/callback', passport.authenticate('google', { failureRedirect: '/failure' }),
   function (req, res) {
     // res.json({ msg: 'Autentifikacija OK', req: req.currentUser });
-    // Kreiram token
+    // Kreiram token i saljem u browser
     const token = jwt.sign({ id: req.currentUser._id }, process.env.JWT_SECRET, { expiresIn: '1d'});
 
-    res.redirect(`${process.env.FRONTEND_URL}/?token=${token}`)
+    res.redirect(`${process.env.FRONTEND_URL}/app-invoice/?token=${token}`)
   }
 );
+// END GOOGLE GOOGLE GOOGLE *************************************************************
 
 
-// ****************************************************************************************************
+// GITHUB
+router.get('/auth/github', passport.authenticate('github'));
+router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/failure' }),
+function (req, res) {
+  // Kreiram token i saljem u browser
+  const token = jwt.sign({ id: req.currentUser._id }, process.env.JWT_SECRET, { expiresIn: '1d'});
 
-
-
-
+  res.redirect(`${process.env.FRONTEND_URL}/app-invoice/?token=${token}`)
+}
+);
 
 
 

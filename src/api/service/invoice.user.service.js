@@ -14,8 +14,7 @@ exports.validateSchema = (body) => {
   });
 
   if (error && error.details) {
-    console.log('Greška u validaciji');
-    
+    console.log('Greška u validaciji.');
     return { error };
   }
   return { value };

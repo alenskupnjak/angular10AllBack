@@ -20,6 +20,7 @@ exports.signup = async (req, res) => {
       return res.status(404).json({ err: 'You have already created account' });
     }
 
+    // Kreiranju usera
     const user = await new User();
     user.local.email = value.email;
     const salt = await bcryptjs.genSalt();
