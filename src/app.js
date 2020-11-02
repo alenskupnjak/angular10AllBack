@@ -78,9 +78,7 @@ app.use(
 // inicijalizacija PASSPORT
 app.use(passport.initialize({ userProperty: 'currentUser' }));
 app.use(passport.session());
-configureJWTStrategy();
-
-
+configureJWTStrategy();   // JWT strategy
 configureGoogleStrategy(); // GOOGLE
 configureGithubStrategy(); // GITHUB
 

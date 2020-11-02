@@ -9,7 +9,7 @@ exports.signup = async (req, res) => {
   try {
     // provjeri jesu li upisani podaci ispravni
     const { error, value } = userService.validateSchema(req.body);
-    
+
     if (error && error.details) {
       return res.status(400).json(error);
     }
@@ -27,7 +27,7 @@ exports.signup = async (req, res) => {
     const hash = await bcryptjs.hash(value.password, salt);
     user.local.password = hash;
     await user.save();
-    
+
     return res.json({
       success: true,
       message: 'User created successfully',
@@ -94,7 +94,12 @@ exports.login = async (req, res) => {
       expiresIn: '1d',
     });
 
-    return res.json({ poruka: 'Token kreiran', success: true, user:value.email, token: token });
+    return res.json({
+      poruka: 'Token kreiran',
+      success: true,
+      user: value.email,
+      token: token,
+    });
   } catch (err) {
     console.error('greska Login', err);
     return res.status(500).json(err);
@@ -105,4 +110,24 @@ exports.login = async (req, res) => {
 // TEST TEST TEST
 exports.test = async (req, res) => {
   return res.json(req.currentUser);
+};
+
+exports.authenticate = (req, res) => {
+  console.log('Da, korisnik postoji u bazi *******************');
+  console.log(req.currentUser);
+  if (req.currentUser.google.email) {
+    user = req.currentUser.google.email;
+  }
+
+  if (req.currentUser.github.email) {
+    user = req.currentUser.github.email;
+  }
+
+  return res.json({ user: user, authstatus: true });
+};
+
+exports.logout = (req, res) => {
+  console.log('prosao kroz Logout');
+  req.logout(); // remove the session and remove req.currentUser;
+  return res.json({ success: true });
 };

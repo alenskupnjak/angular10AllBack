@@ -17,21 +17,26 @@ router.delete('/invoices/:id', passport.authenticate('jwt', { session: false }),
 router.put('/invoices/:id', passport.authenticate('jwt', { session: false }),invoiceController.update);
 router.post('/invoices', passport.authenticate('jwt', { session: false }),invoiceController.create);
 
+
 // CLIENTS
 // router.get('/clients', clientController.findAll);
 router.get('/clients', passport.authenticate('jwt', { session: false }), clientController.findAll);
 router.get('/clients/:id',passport.authenticate('jwt', { session: false }),clientController.findOne);
 router.delete('/clients/:id',passport.authenticate('jwt', { session: false }),clientController.delete);
 router.put('/clients/:id',passport.authenticate('jwt', { session: false }),clientController.update);
-router.post('/clients',passport.authenticate('jwt', { session: false }),clientController.create);
+router.post('/clients',passport.authenticate('jwt', { session: false }), clientController.create);
 
 // USER
 router.post('/signup', userController.signup);
 router.post('/login', userController.login);
 router.get('/login', passport.authenticate('jwt', { session: false }), userController.getAll);
 router.post('/test',passport.authenticate('jwt', { session: false }), userController.test);
+router.get('/authenticate', passport.authenticate('jwt', { session: false }), userController.authenticate);
+router.get('/logout', userController.logout);
 
-router.get('/failure', (req, res) => res.redirect(`${process.env.FRONTEND_URL}/app-invoice/login`));
+
+
+router.get('/failure', (req, res) => res.redirect(`${process.env.FRONTEND_URL}/app-invoice`));
 
 
 // GOOGLE GOOGLE GOOGLE GOOGLE GOOGLE
@@ -49,8 +54,9 @@ router.get( '/auth/google/callback', passport.authenticate('google', { failureRe
     // res.json({ msg: 'Autentifikacija OK', req: req.currentUser });
     // Kreiram token i saljem u browser
     const token = jwt.sign({ id: req.currentUser._id }, process.env.JWT_SECRET, { expiresIn: '1d'});
-
-    res.redirect(`${process.env.FRONTEND_URL}/app-invoice/?token=${token}`)
+  //  console.log('xxxxx', `${process.env.FRONTEND_URL}/app-invoice/invoice/?token=${token}`);
+   
+    res.redirect(`${process.env.FRONTEND_URL}/app-invoice/invoice/?token=${token}`)
   }
 );
 // END GOOGLE GOOGLE GOOGLE *************************************************************
@@ -63,11 +69,11 @@ function (req, res) {
   // Kreiram token i saljem u browser
   const token = jwt.sign({ id: req.currentUser._id }, process.env.JWT_SECRET, { expiresIn: '1d'});
 
-  res.redirect(`${process.env.FRONTEND_URL}/app-invoice/?token=${token}`)
+  res.redirect(`${process.env.FRONTEND_URL}/app-invoice/invoice/?token=${token}`)
+
+  // res.redirect(`http://localhost:3000/appinvoice/app-invoice/invoice/?token=125555`)
 }
 );
-
-
 
 // Aplikacija COURSE
 module.exports = router;

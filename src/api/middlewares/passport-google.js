@@ -18,13 +18,15 @@ exports.configureGoogleStrategy = () => {
         try {
           console.log('accessToken: ', accessToken);
           console.log('refreshToken: ', refreshToken);
-          console.log('profile: ', profile);
+          // console.log('profile: ', profile);
+          console.log('+++++');
+          
 
           // const user = await User.findOrCreate({ 'google.id': profile.id }, (err, user) => done(err, user));
 
           // find the user by google id
           const user = await User.findOne({ 'google.id': profile.id });
-          console.log('Google password prosao.', user);
+          console.log('Google password prosao.');
 
           // if user exit, return this user
           if (user) {
@@ -37,7 +39,7 @@ exports.configureGoogleStrategy = () => {
           newUser.google.displayName = profile.displayName;
           newUser.google.email = profile.emails[0].value;
 
-          // Snimanie usera u database
+          // Snimanjie usera u database
           await newUser.save();
 
           console.log('newUser poslije save()', newUser);

@@ -15,7 +15,7 @@ exports.configureGithubStrategy = () => {
         try {
           // find the user by github id
           const user = await User.findOne({ 'github.id': profile.id });
-          console.log(profile);
+          // console.log(profile);
           if (user) {
             return done(null, user);
           }
