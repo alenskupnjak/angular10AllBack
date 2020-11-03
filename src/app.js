@@ -133,7 +133,7 @@ app.use('/appcourse', routesCourse );
 // Pozdravna poruka
 app.get('/', (req, res) => {
   console.log('Pozdravna poruka, User=', req.user);
-  res.json({ msg: 'Pozdrav. Ovo je Aplikacija Invoice v.002' });
+  res.json({ msg: 'Pozdrav. Ovo je Aplikacija Invoice v.003' });
 });
 
 // NEPOZNATA RUTA izbacuje grešku
