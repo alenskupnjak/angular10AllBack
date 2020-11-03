@@ -11,7 +11,7 @@ exports.findAll = (req, res, next) => {
       res.json(invoices);
     })
     .catch((err) => {
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err);
+      res.status(801).json({greska:'find All'});
     });
 };
 

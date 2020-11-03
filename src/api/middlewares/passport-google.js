@@ -7,6 +7,7 @@ const User = require('../models/invoice.user.model');
 //   credentials (in this case, an accessToken, refreshToken, and Google
 //   profile), and invoke a callback with a user object.
 exports.configureGoogleStrategy = () => {
+  console.log('Prošao sam kroz GOOGLE Strategy');
   passport.use(
     new GoogleStrategy(
       {
@@ -16,17 +17,16 @@ exports.configureGoogleStrategy = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          console.log('accessToken: ', accessToken);
-          console.log('refreshToken: ', refreshToken);
+          console.log('GOOGLE accessToken: ', accessToken);
+          console.log('GOOGLE refreshToken: ', refreshToken);
           // console.log('profile: ', profile);
-          console.log('+++++');
           
 
           // const user = await User.findOrCreate({ 'google.id': profile.id }, (err, user) => done(err, user));
 
           // find the user by google id
           const user = await User.findOne({ 'google.id': profile.id });
-          console.log('Google password prosao.');
+          console.log('Google password prosao. User = ', user);
 
           // if user exit, return this user
           if (user) {
@@ -45,7 +45,7 @@ exports.configureGoogleStrategy = () => {
           console.log('newUser poslije save()', newUser);
           done(null, newUser);
         } catch (err) {
-          console.error(err, 'Passport-Google');
+          console.log(err, 'Passport-Google error');
           return done(err);
         }
       }

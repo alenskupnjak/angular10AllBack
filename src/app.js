@@ -30,7 +30,7 @@ connectMongoDBInvoice();
 // Custom Middlevhere
 app.use((req, res, next) => {
   console.log(chalk.blue.bgRed.bold('START Middlewhare'));
-  req.pozdrav = 'pozdrav iz middlevhera';
+  req.pozdrav = 'pozdrav iz Middlevhera';
   next();
 });
 
@@ -42,13 +42,18 @@ app.use(
 );
 
 // Ispis vremena
-app.use((req, res, next) => {
-  console.log('Time: %d', Date.now());
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log('Time: %d', Date.now());
+//   next();
+// });
 
 // Enable CORS
 app.use(cors());
+
+app.use((req, res, next) => {
+  console.log(chalk.blue.bgRed.bold('**001**'));
+  next();
+});
 
 // Dev logging middleware
 //   'dev'   ,
@@ -75,12 +80,37 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  console.log(chalk.blue.bgRed.bold('**002**'));
+  next();
+});
+
+
 // inicijalizacija PASSPORT
 app.use(passport.initialize({ userProperty: 'currentUser' }));
+app.use((req, res, next) => {
+  console.log(chalk.blue.bgRed.bold('** prosao passport.initialize **'));
+  next();
+});
+
 app.use(passport.session());
 configureJWTStrategy();   // JWT strategy
+app.use((req, res, next) => {
+  console.log(chalk.blue.bgRed.bold('** prosao configureJWTStrategy() 003**'));
+  next();
+});
 configureGoogleStrategy(); // GOOGLE
+app.use((req, res, next) => {
+  console.log(chalk.blue.bgRed.bold('**004**'));
+  next();
+});
 configureGithubStrategy(); // GITHUB
+app.use((req, res, next) => {
+  console.log(chalk.blue.bgRed.bold('**005**'));
+  next();
+});
+
+
 
 // save user into session
 passport.serializeUser((user, done) => {
@@ -90,8 +120,14 @@ passport.serializeUser((user, done) => {
 // extract the userId from session
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
+    console.log('001');
     done(null, user);
   });
+});
+
+app.use((req, res, next) => {
+  console.log(chalk.blue.bgRed.bold('**006**'));
+  next();
 });
 
 // aplikacija APP Invoice
@@ -113,7 +149,7 @@ app.use((req, res, next) => {
 });
 
 // Error **************************************************
-// Ako se pojavi graška u programu završava ovdje
+// Ako se pojavi greška u programu završava ovdje
 app.use((error, req, res, next) => {
   res.status(error.status || 500);
   return res.json({

@@ -69,6 +69,8 @@ function (req, res) {
   // Kreiram token i saljem u browser
   const token = jwt.sign({ id: req.currentUser._id }, process.env.JWT_SECRET, { expiresIn: '1d'});
 
+  console.log(' Poruka  prije u invoice');
+  
   res.redirect(`${process.env.FRONTEND_URL}/app-invoice/invoice/?token=${token}`)
 
   // res.redirect(`http://localhost:3000/appinvoice/app-invoice/invoice/?token=125555`)

@@ -13,6 +13,7 @@ exports.configureGithubStrategy = () => {
       },
       async (token, tokenSecret, profile, done) => {
         try {
+          console.log('GITHUB accessToken: ', token);
           // find the user by github id
           const user = await User.findOne({ 'github.id': profile.id });
           // console.log(profile);
