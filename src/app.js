@@ -41,11 +41,6 @@ app.use(
   swaggerUI.setup(swaggerDocument, { explorer: true })
 );
 
-// Ispis vremena
-// app.use((req, res, next) => {
-//   console.log('Time: %d', Date.now());
-//   next();
-// });
 
 // Enable CORS
 app.use(cors());
@@ -55,8 +50,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Dev logging middleware
-//   'dev'   ,
+
 // Concise output colored by response status for development use. The :status token will be colored green for success codes, red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for information codes.
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); //
@@ -80,11 +74,6 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  console.log(chalk.blue.bgRed.bold('**002**'));
-  next();
-});
-
 
 // inicijalizacija PASSPORT
 app.use(passport.initialize({ userProperty: 'currentUser' }));
@@ -97,9 +86,6 @@ app.use(passport.session());
 configureJWTStrategy();   // JWT strategy
 configureGoogleStrategy(); // GOOGLE
 configureGithubStrategy(); // GITHUB
-
-
-
 
 
 // save user into session
@@ -124,7 +110,7 @@ app.use('/appcourse', routesCourse );
 // Pozdravna poruka
 app.get('/', (req, res) => {
   console.log('Pozdravna poruka, User=', req.user);
-  res.json({ msg: 'Pozdrav. Ovo je Aplikacija Invoice v.005' });
+  res.json({ msg: 'Pozdrav. Ovo je Aplikacija Invoice v.006' });
 });
 
 // NEPOZNATA RUTA izbacuje grešku
