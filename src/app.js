@@ -62,6 +62,26 @@ app.use(express.json());
 // is a method inbuilt in express to recognize the incoming Request Object as a JSON Object
 app.use(bodyParser.json());
 
+app.all('/*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
+
+// SETUP Access-Control-Allow-Origin
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'OPTIONS,GET, POST, PUT, PATCH, DELETE'
+  );
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
+  res.header('Access-Control-Allow-Credentials', true);
+  next();
+});
+
 //  is a method inbuilt in express to recognize the incoming Request Object as strings or arrays.
 app.use(express.urlencoded({ extended: true }));
 
