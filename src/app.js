@@ -96,15 +96,9 @@ app.use((req, res, next) => {
 app.use(passport.session());
 configureJWTStrategy();   // JWT strategy
 configureGoogleStrategy(); // GOOGLE
-app.use((req, res, next) => {
-  console.log(chalk.blue.bgRed.bold('**004**'));
-  next();
-});
 configureGithubStrategy(); // GITHUB
-app.use((req, res, next) => {
-  console.log(chalk.blue.bgRed.bold('**005**'));
-  next();
-});
+
+
 
 
 
@@ -121,10 +115,7 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-app.use((req, res, next) => {
-  console.log(chalk.blue.bgRed.bold('**006**'));
-  next();
-});
+
 
 // aplikacija APP Invoice
 app.use('/appinvoice', routesInvoice);
@@ -133,7 +124,7 @@ app.use('/appcourse', routesCourse );
 // Pozdravna poruka
 app.get('/', (req, res) => {
   console.log('Pozdravna poruka, User=', req.user);
-  res.json({ msg: 'Pozdrav. Ovo je Aplikacija Invoice v.004' });
+  res.json({ msg: 'Pozdrav. Ovo je Aplikacija Invoice v.005' });
 });
 
 // NEPOZNATA RUTA izbacuje grešku
