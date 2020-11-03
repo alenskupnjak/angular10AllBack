@@ -56,8 +56,8 @@ router.get( '/auth/google/callback', passport.authenticate('google', { failureRe
     const token = jwt.sign({ id: req.currentUser._id }, process.env.JWT_SECRET, { expiresIn: '1d'});
   //  console.log('xxxxx', `${process.env.FRONTEND_URL}/app-invoice/invoice/?token=${token}`);
    
-    res.redirect(`${process.env.FRONTEND_URL}/app-invoice/invoice/?token=${token}`)
-
+    // res.redirect(`${process.env.FRONTEND_URL}/app-invoice/invoice/?token=${token}`)
+    res.redirect(`${process.env.FRONTEND_URL}/?token=${token}`)
   }
 );
 // END GOOGLE GOOGLE GOOGLE *************************************************************
@@ -72,7 +72,7 @@ function (req, res) {
 
   console.log(' Poruka  prije u invoice');
   
-  res.redirect(`${process.env.FRONTEND_URL}/app-invoice/invoice/?token=${token}`)
+  res.redirect(`${process.env.FRONTEND_URL}/?token=${token}`)
 
   // res.redirect(`http://localhost:3000/appinvoice/app-invoice/invoice/?token=125555`)
 }

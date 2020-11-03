@@ -102,7 +102,6 @@ passport.deserializeUser((id, done) => {
 });
 
 
-
 // aplikacija APP Invoice
 app.use('/appinvoice', routesInvoice);
 app.use('/appcourse', routesCourse );
