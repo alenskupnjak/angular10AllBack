@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node src/app.js",
     "start3001": "nodemon src/app.js",
     "Importiranje_u_bazu": "node data/baza.js -i",
     "Brisanje_baze": "node data/baza.js -d"
@@ -30,5 +31,8 @@
     "passport-jwt": "^4.0.0",
     "swagger-ui-express": "^4.1.4"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "engines": {
+    "node": ">=10.0.0"
+  }
 }
