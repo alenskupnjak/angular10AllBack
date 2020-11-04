@@ -57,7 +57,7 @@ router.get( '/auth/google/callback', passport.authenticate('google', { failureRe
   //  console.log('xxxxx', `${process.env.FRONTEND_URL}/app-invoice/invoice/?token=${token}`);
    
     // res.redirect(`${process.env.FRONTEND_URL}/app-invoice/invoice/?token=${token}`)
-    res.redirect(`${process.env.FRONTEND_URL}/?token=${token}`)
+    res.redirect(`${process.env.FRONTEND_URL}/angularAll/?token=${token}`)
   }
 );
 // END GOOGLE GOOGLE GOOGLE *************************************************************
@@ -72,7 +72,7 @@ function (req, res) {
 
   console.log(' Poruka  prije u invoice');
   
-  res.redirect(`${process.env.FRONTEND_URL}/?token=${token}`)
+  res.redirect(`${process.env.FRONTEND_URL}/angularAll/?token=${token}`)
 
   // res.redirect(`http://localhost:3000/appinvoice/app-invoice/invoice/?token=125555`)
 }

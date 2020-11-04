@@ -45,11 +45,6 @@ app.use(
 // Enable CORS
 app.use(cors());
 
-app.use((req, res, next) => {
-  console.log(chalk.blue.bgRed.bold('**001**'));
-  next();
-});
-
 
 // Concise output colored by response status for development use. The :status token will be colored green for success codes, red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for information codes.
 if (process.env.NODE_ENV === 'development') {
@@ -99,6 +94,7 @@ app.use(
 app.use(passport.initialize({ userProperty: 'currentUser' }));
 app.use((req, res, next) => {
   console.log(chalk.blue.bgRed.bold('** prosao passport.initialize **'));
+  console.log(chalk.blue.bgGreen.bold('** prosao passport.initialize **'));
   next();
 });
 

@@ -66,7 +66,7 @@ exports.create = (req, res, next) => {
 // **********************************
 //  Pronadi pijedinačni zapis
 exports.findOne = (req, res, next) => {
-  Invoice.findById(req.params.id)
+  Invoice.findById(req.params.id).populate('invoiceclient')
     .then((invoice) => {
       if (!invoice) {
         return (
