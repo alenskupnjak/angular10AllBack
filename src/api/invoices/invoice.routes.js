@@ -74,7 +74,8 @@ function (req, res) {
 
   console.log(' Poruka  prije u invoice');
   
-  res.redirect(`${process.env.FRONTEND_URL}/?token=${token}`)
+  // res.redirect(`${process.env.FRONTEND_URL}/?token=${token}`)
+  res.redirect(`${process.env.FRONTEND_URL}/app-invoice/invoice/?token=${token}`)
 
   // res.redirect(`http://localhost:3000/appinvoice/app-invoice/invoice/?token=125555`)
 }
