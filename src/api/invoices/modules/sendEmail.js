@@ -13,7 +13,7 @@ const sendEmail = async (options) => {
   });
 
   let info = await transporter.sendMail({
-    from: `${AlenAngular10} <${process.env.FROM_EMAIL}>`, // sender address
+    from: `AlenAngular10 <${process.env.FROM_EMAIL}>`, // sender address
     to: `${options.email}`, // list of receivers
     subject: `${options.subject}`, // Subject line
     text: `${options.html}`, // plain text body
