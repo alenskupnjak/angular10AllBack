@@ -1,6 +1,6 @@
 const express = require('express');
-const fileController = require('../api/controllers/course.file.ctrl');
-const baseController = require('../api/controllers/course.base.ctrl');
+const fileController = require('./file.ctrl');
+const baseController = require('./base.ctrl');
 const passport = require('passport');
 
 const router = express.Router();

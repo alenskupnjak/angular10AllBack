@@ -1,7 +1,8 @@
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const userService = require('../service/invoice.user.service');
-const User = require('../models/invoice.user.model');
+const userService = require('./user.service');
+const User = require('./models/user.model');
+const sendEmail = require('./modules/sendEmail')
 
 // *******************************************************************
 // SIGNUP SIGNUP SIGNUP SIGNUP SIGNUP
@@ -112,8 +113,9 @@ exports.test = async (req, res) => {
   return res.json(req.currentUser);
 };
 
+// AUTENTIFIKACIJA
 exports.authenticate = (req, res) => {
-  console.log('Da, korisnik postoji u bazi *******************');
+  console.log('Da, korisnik postoji u bazi.');
   console.log(req.currentUser);
   if (req.currentUser.google.email) {
     user = req.currentUser.google.email;
@@ -126,8 +128,72 @@ exports.authenticate = (req, res) => {
   return res.json({ user: user, authstatus: true });
 };
 
+//  LOGOUT
 exports.logout = (req, res) => {
   console.log('prosao kroz Logout');
   req.logout(); // remove the session and remove req.currentUser;
   return res.json({ success: true });
+};
+
+
+
+// FORGOT PASSWORD
+exports.forgotPassword = async (req, res) => {
+  try {
+    // Validiram vrijednost unesenih podataka
+    const { value, error } = userService.validateForgotSchema(req.body);
+
+    if (error && error.details) {
+      return res.status(518).json(error);
+    }
+
+    const criteria = {
+      $or: [
+        { 'google.email': value.email },
+        { 'github.email': value.email },
+        // { 'twitter.email': value.email },
+        { 'local.email': value.email },
+      ],
+    };
+
+    console.log('criteria?', criteria);
+
+    // Pronadi usera u bazi
+    const user = await User.findOne(criteria);
+
+
+    if (!user) {
+      return res.status(519).json({ err: 'could not find user' });
+    }
+
+    // Kreiram token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {expiresIn: '1d',});
+
+    const resetLink = `
+    <h4> Please click on the link to reset the password </h4>
+    <a href ='${process.env.FRONTEND_URL}/reset-password/${token}'>Reset Password</a>
+    `;
+
+    // definiraj usera
+    const sanitizedUser = userService.getUser(user);
+
+    const results = await sendEmail({
+      html: resetLink,
+      subject: 'Forgot Password poslano iz aplikacije Angular10All',
+      email: sanitizedUser.email,
+    });
+    
+    return res.json({
+      message: 'Mail poslan korisniku.',
+      sanitizedUser: sanitizedUser,
+      token: token,
+      results: results,
+    });
+
+
+    // return res.json(results);
+  } catch (err) {
+    console.error(err);
+    return res.status(555).json(err);
+  }
 };

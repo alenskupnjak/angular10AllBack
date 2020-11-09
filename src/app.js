@@ -1,6 +1,6 @@
 const chalk = require('chalk'); // boje consol.log....
 const express = require('express');
-const connectMongoDBInvoice = require('./config/invoice.connect.MongoDB'); // Definicija baze i Import
+const connectMongoDBInvoice = require('./api/invoices/modules/connect.MongoDB'); // Definicija baze i Import
 const morgan = require('morgan'); // ispisaianje na command liniji poruke...
 const bodyParser = require('body-parser'); // Body parser, bez ovoga ne mozemo slati podatke u req.body
 const swaggerUI = require('swagger-ui-express');
@@ -17,8 +17,8 @@ console.log(chalk.bold.green('START Aplikacija START'));
 const app = express();
 
 // Import routes Aplikacija
-const routesInvoice = require('./config/invoice.routes');
-const routesCourse = require('./config/course.routes');
+const routesInvoice = require('./api/invoices/invoice.routes');
+const routesCourse = require('./api/course/routes');
 
 // definiramo path za file u koji spremamo potrebne varijable
 const dotenv = require('dotenv'); // manage your ENV varijable
@@ -92,11 +92,6 @@ app.use(
 
 // inicijalizacija PASSPORT
 app.use(passport.initialize({ userProperty: 'currentUser' }));
-app.use((req, res, next) => {
-  console.log(chalk.blue.bgRed.bold('** prosao passport.initialize **'));
-  console.log(chalk.blue.bgGreen.bold('** prosao passport.initialize **'));
-  next();
-});
 
 app.use(passport.session());
 configureJWTStrategy();   // JWT strategy

@@ -1,9 +1,9 @@
 const colors = require('colors');
 const jwt = require('jsonwebtoken');
 const express = require('express');
-const invoiceController = require('../api/controllers/invoiceInvoiceCtrl');
-const clientController = require('../api/controllers/invoiceClientCtrl');
-const userController = require('../api/controllers/invoiceUserCtrl');
+const invoiceController = require('./invoiceCtrl');
+const clientController = require('./clientCtrl');
+const userController = require('./userCtrl');
 const passport = require('passport');
 
 const router = express.Router();
@@ -33,6 +33,7 @@ router.get('/login', passport.authenticate('jwt', { session: false }), userContr
 router.post('/test',passport.authenticate('jwt', { session: false }), userController.test);
 router.get('/authenticate', passport.authenticate('jwt', { session: false }), userController.authenticate);
 router.get('/logout', userController.logout);
+router.post('/forgot-password', userController.forgotPassword);
 
 
 

@@ -1,6 +1,6 @@
 const PassportJWT = require('passport-jwt');
 const passport = require('passport');
-const User = require('../models/invoice.user.model');
+const User = require('../invoices/models/user.model');
 
 exports.configureJWTStrategy = () => {
   console.log('Prošao sam kroz configureJWTStrategy');
@@ -10,10 +10,8 @@ exports.configureJWTStrategy = () => {
   opts.secretOrKey = process.env.JWT_SECRET;
   passport.use(
     new PassportJWT.Strategy(opts, (payload, done) => {
-      console.log('x+x+x 01');
       
       User.findOne({ _id: payload.id }, (err, user) => {
-        console.log('x+x+x 02');
         if (err) {
           return done('err u configureJWTStrategy ', false);
         }
