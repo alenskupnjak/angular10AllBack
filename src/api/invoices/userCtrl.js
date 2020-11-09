@@ -2,7 +2,10 @@ const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const userService = require('./user.service');
 const User = require('./models/user.model');
-const sendEmail = require('./modules/sendEmail')
+const sendEmail = require('./modules/sendEmail');
+const utilCtrl = require('./modules/util');
+
+
 
 // *******************************************************************
 // SIGNUP SIGNUP SIGNUP SIGNUP SIGNUP
@@ -91,9 +94,8 @@ exports.login = async (req, res) => {
     }
 
     // Kreiram token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '1d',
-    });
+    // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {expiresIn: '1d',});
+    const token = getJWTToken({ id: user._id });
 
     return res.json({
       poruka: 'Token kreiran',
@@ -135,8 +137,6 @@ exports.logout = (req, res) => {
   return res.json({ success: true });
 };
 
-
-
 // FORGOT PASSWORD
 exports.forgotPassword = async (req, res) => {
   try {
@@ -161,7 +161,6 @@ exports.forgotPassword = async (req, res) => {
     // Pronadi usera u bazi
     const user = await User.findOne(criteria);
 
-
     if (!user) {
       return res.status(519).json({ err: 'could not find user' });
     }
@@ -171,7 +170,7 @@ exports.forgotPassword = async (req, res) => {
 
     const resetLink = `
     <h4> Please click on the link to reset the password </h4>
-    <a href ='${process.env.FRONTEND_URL}/reset-password/${token}'>Reset Password</a>
+    <a href ='${process.env.FRONTEND_URL}/app-invoice/reset-password/${token}'>Reset Password</a>
     `;
 
     // definiraj usera
@@ -182,7 +181,7 @@ exports.forgotPassword = async (req, res) => {
       subject: 'Forgot Password poslano iz aplikacije Angular10All',
       email: sanitizedUser.email,
     });
-    
+
     return res.json({
       message: 'Mail poslan korisniku.',
       sanitizedUser: sanitizedUser,
@@ -190,8 +189,43 @@ exports.forgotPassword = async (req, res) => {
       results: results,
     });
 
-
     // return res.json(results);
+  } catch (err) {
+    console.error(err);
+    return res.status(555).json(err);
+  }
+};
+
+// Reset password
+exports.resetPassword = async (req, res) => {
+  try {
+    const { password } = req.body;
+    if (!password) {
+      return res.status(523).json({ err: 'password is required' });
+    }
+
+    console.log(req.currentUser, req.currentUser);
+
+    const user = await User.findById(req.currentUser._id);
+    const sanitizedUser = userService.getUser(user);
+    if (!user.local.email) {
+      user.local.email = sanitizedUser.email;
+      user.local.name = sanitizedUser.name;
+    }
+
+    console.log('xxxx','password');
+    
+    const salt = await bcryptjs.genSalt();
+    const hash = await bcryptjs.hash(password, salt);
+    // ili
+    const hash1 = await utilCtrl.getEncryptedPassword(password);
+    console.log('hash', hash);
+    console.log('hash1', hash1);
+
+    
+    user.local.password = hash;
+    await user.save();
+    return res.json({ success: true });
   } catch (err) {
     console.error(err);
     return res.status(555).json(err);

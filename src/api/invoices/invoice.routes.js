@@ -34,6 +34,7 @@ router.post('/test',passport.authenticate('jwt', { session: false }), userContro
 router.get('/authenticate', passport.authenticate('jwt', { session: false }), userController.authenticate);
 router.get('/logout', userController.logout);
 router.post('/forgot-password', userController.forgotPassword);
+router.put('/reset-password', passport.authenticate('jwt', { session: false }), userController.resetPassword);
 
 
 
