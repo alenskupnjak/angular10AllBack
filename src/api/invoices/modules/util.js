@@ -18,6 +18,3 @@ exports.getEncryptedPassword = async (password) => {
   return hash;
 };
 
-exports.printaj = () => {
-  console.log('Prošako kroz  printaj');
-};

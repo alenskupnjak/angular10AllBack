@@ -95,7 +95,8 @@ exports.login = async (req, res) => {
 
     // Kreiram token
     // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {expiresIn: '1d',});
-    const token = getJWTToken({ id: user._id });
+    // ili
+    const token = utilCtrl.getJWTToken({ id: user._id });
 
     return res.json({
       poruka: 'Token kreiran',
